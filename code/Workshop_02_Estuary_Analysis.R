@@ -415,3 +415,56 @@ cor.test(
 # 95% CI = [-0.316, 0.403]
 # No statistically significant linear relationship
 # between daily salinity and fish abundance was detected.
+
+# Join scientific names to fish catch records
+catch_scientific <- catch_clean %>%
+  left_join(
+    species_dictionary,
+    by = c("species" = "common_name")
+  )
+
+# Check the result
+print(head(catch_scientific))
+
+catch_with_zones <- catch_scientific %>%
+  left_join(
+    estuary_metadata,
+    by = c("site" = "site_name")
+  )
+
+glimpse(catch_with_zones)
+
+fish_salinity <- catch_with_zones %>%
+  mutate(date = as.Date(date)) %>%
+  left_join(
+    daily_salinity,
+    by = c("date", "zone")
+  )
+
+glimpse(fish_salinity)
+
+fish_complete <- fish_salinity %>%
+  tidyr::complete(
+    nesting(site, date),
+    species = unique(species)
+  )
+
+nrow(fish_complete)
+
+
+fish_complete <- fish_complete %>%
+  select(site, date, species, count) %>%
+  left_join(
+    species_dictionary,
+    by = c("species" = "common_name")
+  ) %>%
+  left_join(
+    estuary_metadata,
+    by = c("site" = "site_name")
+  ) %>%
+  left_join(
+    daily_salinity,
+    by = c("date", "zone")
+  )
+
+glimpse(fish_complete)
