@@ -1,0 +1,49 @@
+---
+title: "Workshop 1: Palmer Penguins Data Analysis"
+author: "TRISHA WAGHELA"
+format: html
+---
+
+## Introduction
+
+This report explores the Palmer Penguins dataset using R.
+
+The analysis compares body mass among three penguin
+species: Adelie, Chinstrap, and Gentoo.
+
+Data manipulation and visualisation are performed
+using the tidyverse package.
+```{r}
+
+## Average Body Mass by Species
+
+
+
+library(tidyverse)
+library(palmerpenguins)
+
+penguin_summary <- penguins %>%
+  group_by(species) %>%
+  summarise(
+    mean_mass_g = mean(body_mass_g, na.rm = TRUE)
+  )
+
+knitr::kable(penguin_summary)
+```
+## Penguin Body Mass by Species and Island
+
+```{r}
+ggplot(penguins, aes(x = species, y = body_mass_g, fill = island)) +
+  geom_boxplot() +
+  labs(
+    title = "Penguin Body Mass by Species and Island",
+    x = "Penguin Species",
+    y = "Body Mass (g)",
+    fill = "Island"
+  ) +
+  theme_minimal()
+```
+
+
+
+
