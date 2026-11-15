@@ -139,3 +139,33 @@ cat('Fish rows:', nrow(fish_complete), '\n')
 cat('Zero-catch rows:', sum(fish_complete$count == 0), '\n')
 cat('Fish sampling sites:', n_distinct(fish_complete$site), 'of', nrow(estuary_metadata), '\n')
 cat('Saved 5 CSV/PNG outputs to outputs/.\n')
+
+catch_log_all <- purrr::map_dfr(
+  readxl::excel_sheets("data/workshop2/estuary_catch_log.xlsx"),
+  ~ readxl::read_excel(
+    "data/workshop2/estuary_catch_log.xlsx",
+    sheet = .x
+  ),
+  .id = "sheet_id"
+)
+
+glimpse(catch_log_all)
+
+catch_clean <- catch_log_all %>%
+  mutate(
+    site = stringr::str_to_lower(
+      stringr::str_replace_all(
+        stringr::str_trim(site), "[ _]+", "_"
+      )
+    ),
+    species = stringr::str_to_lower(
+      stringr::str_replace_all(
+        stringr::str_trim(species), "[ _]+", "_"
+      )
+    ),
+    date = as.Date(date),
+    count = na_if(count, -999)
+  ) %>%
+  select(site, date, species, count)
+
+unique(catch_clean$site)
