@@ -62,3 +62,18 @@ tmap_save(
   units = "in",
   dpi = 300
 )
+
+tmap_style("beaver")
+map4
+
+tmap_style("beaver")
+map4
+
+tmap_save(
+  map4,
+  "outputs/Workshop_04_Copepod_Map_Final.png",
+  width = 8,
+  height = 6,
+  units = "in",
+  dpi = 300
+)
